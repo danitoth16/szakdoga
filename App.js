@@ -1,21 +1,53 @@
-import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React from "react";
+import { createStackNavigator } from "@react-navigation/stack";
+import { NavigationContainer } from "@react-navigation/native";
+import * as firebase from "firebase";
+import { f, auth, database } from "./config/config.js";
+import CountySights from "./components/CountySights.js";
 
-export default function App() {
+import Tabs from "./navigation/tabs";
+import {
+  Feed,
+  Home,
+  Map,
+  Profile,
+  Login,
+  SignUpScreen,
+  Search,
+} from "./screens";
+
+const Stack = createStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}
+        initialRouteName={"Login"}
+      >
+        <Stack.Screen name="Feed" component={Tabs} />
+        <Stack.Screen name="Home" options={{ title: "Counties List" }}>
+          {(props) => <Home {...props} countiesData={data.countiesData} />}
+        </Stack.Screen>
+        <Stack.Screen name="Map" component={Map} />
+        <Stack.Screen name="Search" component={Search} />
+        <Stack.Screen name="Profile" component={Profile} />
+        <Stack.Screen name="Login" component={Login} />
+        <Stack.Screen name="SignUpScreen" component={SignUpScreen} />
+        <Stack.Screen name="Sights" component={CountySights} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+const HomeStack = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="Feed" component={Tabs} />
+    </Stack.Navigator>
+  );
+};
+
+export default App;
